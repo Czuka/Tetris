@@ -11,21 +11,29 @@ public class GameArea extends JPanel  {
 
     private TetrisBlock block;
 
+    private Color[][] backgroundBlocs;
+
     public GameArea(){
         this.setBounds(0,0,300,600);
-        //backgroundBlocs = new Color[ROWS][COLUMNS];
+        backgroundBlocs = new Color[ROWS][COLUMNS];
 
-        spawnBlock();
+        backgroundBlocs[17][4] = Color.green;
+
     }
 
     public void spawnBlock()
     {
         block = new TetrisBlock(new int[][]{{1,0},{1,0},{1,1}}, Color.BLUE );
         block.spawn(COLUMNS);
+
+
     }
 
     public boolean moveBlockDown(){
-        if (checkBottom() == false) return false;
+        if (checkBottom() == false){
+         moveBlockToBackground();
+         return false;
+        }
         block.moveDown();
         repaint();
 
@@ -38,6 +46,33 @@ public class GameArea extends JPanel  {
             return false;
         }
         return true;
+    }
+
+    private void moveBlockToBackground(){
+        int[][]shape = block.getShape();
+        int h = block.getHeight();
+        int w = block.getWidth();
+
+        int xPos = block.getXOffSet();
+        int yPos = block.getYOffSet();
+        System.out.println("h= " +h+ " w= " + w);
+        Color color = block.getColor();
+
+        for(int r= 0; r<h; r++){
+            for (int c = 0; c < w; c++){
+                System.out.println("block row= " + r + "block col= " + c + " xPos= "+ xPos + " yPos= "+ yPos);
+                if (shape[r][c] == 1){
+                    System.out.println("Color= "+color+ "block row= " + r + " xPos= "+ xPos + " yPos= "+ yPos +   " block col= "+ c );
+
+                    backgroundBlocs[r + yPos][ c+ xPos] = color;
+                    System.out.println("after");
+                }
+                System.out.println("after2");
+
+            }
+
+        }
+        System.out.println("after3");
     }
 
 
@@ -62,12 +97,38 @@ public class GameArea extends JPanel  {
 //                    int y = (block.getYOffSet() + row)*CELL_SIZE;
 //                    System.out.println("y=" +y+ " row= "+row+ "  block.getyOffSet()= "+block.getYOffSet());
 
+                    drawGridSquare(g, c, col+x,row+y);
 
-                    g.setColor(c);
-                    g.fillRect((col+x) * CELL_SIZE+2 , (row+y)*CELL_SIZE+2, CELL_SIZE-4, CELL_SIZE-4);
                 }
             }
         }
+    }
+    /*
+                        g.setColor(c);
+                    g.fillRect((col+x) * CELL_SIZE+2 , (row+y)*CELL_SIZE+2, CELL_SIZE-4, CELL_SIZE-4);
+     */
+
+    private void drawBackground(Graphics g){
+        Color color;
+
+        for (int row = 0; row< ROWS; row++)
+        {
+            for (int col = 0; col < COLUMNS; col++)
+            {
+                color = backgroundBlocs[row][col];
+
+                if(color !=null){
+
+                    drawGridSquare(g,color,col, row);
+
+                }
+            }
+        }
+    }
+
+    private void drawGridSquare(Graphics g, Color color, int column, int rows) {
+        g.setColor(color);
+        g.fillRect((column) * CELL_SIZE+2 , (rows)*CELL_SIZE+2, CELL_SIZE-4, CELL_SIZE-4);
     }
 
 
@@ -89,6 +150,8 @@ public class GameArea extends JPanel  {
             }
         }
         g.fillRect(300,0,10,600);
+
+        drawBackground(g);
         drawBlock(g);
 
     }
