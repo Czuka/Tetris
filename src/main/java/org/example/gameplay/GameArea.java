@@ -55,24 +55,15 @@ public class GameArea extends JPanel  {
 
         int xPos = block.getXOffSet();
         int yPos = block.getYOffSet();
-        System.out.println("h= " +h+ " w= " + w);
         Color color = block.getColor();
 
         for(int r= 0; r<h; r++){
             for (int c = 0; c < w; c++){
-                System.out.println("block row= " + r + "block col= " + c + " xPos= "+ xPos + " yPos= "+ yPos);
                 if (shape[r][c] == 1){
-                    System.out.println("Color= "+color+ "block row= " + r + " xPos= "+ xPos + " yPos= "+ yPos +   " block col= "+ c );
-
                     backgroundBlocs[r + yPos][ c+ xPos] = color;
-                    System.out.println("after");
                 }
-                System.out.println("after2");
-
             }
-
         }
-        System.out.println("after3");
     }
 
 
