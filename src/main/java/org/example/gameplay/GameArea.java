@@ -40,13 +40,50 @@ public class GameArea extends JPanel  {
         return true;
     }
 
+    public void moveBlockLeft(){
+        if(!checkLeft()) return;
+        block.moveLeft();
+
+        repaint();
+    }
+    public void moveBlockRight(){
+        if (!checkRight()) return;
+        block.moveRight();
+        repaint();
+    }
+    public void dropBlock(){
+        while(checkBottom()){
+            block.moveDown();
+        }
+        repaint();
+
+    }
+    public void rotateBlock(){
+        block.rotate();
+        repaint();
+    }
+
+
+
     private boolean checkBottom(){
         if(block.getBootomEdge() == ROWS){
-            System.out.println("boolean");
             return false;
         }
         return true;
     }
+    // można to zrobić czystym boolenem
+    private boolean checkLeft(){
+        if(block.getLeftEdge() <= 0) return false;
+        return true;
+    }
+
+    // można to zrobić czystym boolenem
+    private boolean checkRight(){
+        if(block.getRightEdge() == COLUMNS ) return false;
+        return true;
+    }
+
+
 
     private void moveBlockToBackground(){
         int[][]shape = block.getShape();
