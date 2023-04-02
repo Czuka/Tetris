@@ -66,18 +66,34 @@ public class GameArea extends JPanel  {
 
 
     private boolean checkBottom(){
-        if(block.getBootomEdge() == ROWS){
-            return false;
+        if(block.getBootomEdge() == ROWS)    return false;
+
+        int[][] shape = block.getShape();
+        int w = block.getWidth();
+        int h = block.getHeight();
+
+        for (int col= 0; col<w; col++){
+            for(int row  = h-1; row>=0; row--){
+                if (shape[row][col] != 0) {
+                    int x = col +block.getXOffSet();
+                    int y = row +block.getYOffSet() +1;
+                    if(y<0) break;
+                    if (backgroundBlocs[y][x] != null) return false;
+                    break;
+                }
+            }
         }
+
+
         return true;
     }
-    // można to zrobić czystym boolenem
+
     private boolean checkLeft(){
         if(block.getLeftEdge() <= 0) return false;
         return true;
     }
 
-    // można to zrobić czystym boolenem
+
     private boolean checkRight(){
         if(block.getRightEdge() == COLUMNS ) return false;
         return true;
