@@ -128,7 +128,6 @@ public class GameArea extends JPanel  {
 
     public void clearLines() {
         boolean lineIsFilled;
-        System.out.println("clear lines start");
 
         for (int r = ROWS-1; r >= 0; r--){
 
@@ -141,11 +140,26 @@ public class GameArea extends JPanel  {
                 }
             }
             if(lineIsFilled){
-                for(int i = 0; i < COLUMNS; i++){
-                    backgroundBlocs[r][i] = null;
-                }
+                clearLine(r);
+                slideDown(r);
+                clearLine(0);
+                repaint();
+                r++;
             }
-            repaint();
+
+        }
+    }
+    private void clearLine(int r){
+        for(int i = 0; i < COLUMNS; i++){
+            backgroundBlocs[r][i] = null;
+        }
+    }
+
+    private void slideDown(int r){
+        for(int row = r; row > 0; row--){
+            for(int col = 0; col < COLUMNS; col++){
+                backgroundBlocs[row][col] = backgroundBlocs[row-1][col];
+            }
         }
     }
 

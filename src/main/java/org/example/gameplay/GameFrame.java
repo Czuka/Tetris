@@ -69,14 +69,12 @@ public class GameFrame extends JFrame {
         am.put("downKEY", new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                System.out.println("down");
                 ga.dropBlock();
             }
         });
         am.put("upKEY", new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                System.out.println("up");
                 ga.rotateBlock();
             }
         });
