@@ -17,22 +17,19 @@ public class GameArea extends JPanel  {
         this.setBounds(0,0,300,600);
         backgroundBlocs = new Color[ROWS][COLUMNS];
 
-        backgroundBlocs[17][4] = Color.green;
-
     }
 
     public void spawnBlock()
     {
         block = new TetrisBlock(new int[][]{{1,0},{1,0},{1,1}}, Color.BLUE );
         block.spawn(COLUMNS);
-
-
     }
 
     public boolean moveBlockDown(){
         if (checkBottom() == false){
-         moveBlockToBackground();
-         return false;
+            moveBlockToBackground();
+            clearLines();
+            return false;
         }
         block.moveDown();
         repaint();
@@ -83,20 +80,73 @@ public class GameArea extends JPanel  {
                 }
             }
         }
-
-
         return true;
     }
 
     private boolean checkLeft(){
         if(block.getLeftEdge() <= 0) return false;
+
+        int[][] shape = block.getShape();
+        int w = block.getWidth();
+        int h = block.getHeight();
+
+        for (int row= 0; row<h; row++){
+            for(int col = 0; col<w; col++){
+                if (shape[row][col] != 0) {
+                    int x = col +block.getXOffSet() -1;
+                    int y = row +block.getYOffSet();
+                    if(y<0) break;
+                    if (backgroundBlocs[y][x] != null) return false;
+                    break;
+                }
+            }
+        }
         return true;
     }
 
 
     private boolean checkRight(){
         if(block.getRightEdge() == COLUMNS ) return false;
+
+        int[][] shape = block.getShape();
+        int w = block.getWidth();
+        int h = block.getHeight();
+
+        for (int row= 0; row<h; row++){
+            for(int col = w-1 ; col >= 0; col--){
+                if (shape[row][col] != 0) {
+                    int x = col +block.getXOffSet() +1;
+                    int y = row +block.getYOffSet();
+                    if(y<0) break;
+                    if (backgroundBlocs[y][x] != null) return false;
+                    break;
+                }
+            }
+        }
         return true;
+    }
+
+    public void clearLines() {
+        boolean lineIsFilled;
+        System.out.println("clear lines start");
+
+        for (int r = ROWS-1; r >= 0; r--){
+
+            lineIsFilled  = true;
+
+            for(int c = 0; c < COLUMNS; c++){
+                if (backgroundBlocs[r][c] == null){
+                    lineIsFilled =  false;
+                    break;
+                }
+            }
+            if(lineIsFilled){
+                for(int i = 0; i < COLUMNS; i++){
+                    backgroundBlocs[r][i] = null;
+                }
+            }
+            repaint();
+        }
     }
 
 
