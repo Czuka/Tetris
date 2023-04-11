@@ -15,6 +15,7 @@ public class GameFrame extends JFrame {
     public int screenWidth = (int) screenSize.getWidth();
     public int screenHeight = (int) screenSize.getHeight();
     private GameArea ga;
+
     JFrame frame ;
 
     public void initComponents(){
@@ -27,7 +28,10 @@ public class GameFrame extends JFrame {
 
 
         ga = new GameArea();
+
         frame.add(ga);
+
+
 
 
     }
@@ -39,6 +43,14 @@ public class GameFrame extends JFrame {
         System.out.println("init controls");
 
         startGame();
+
+    }
+
+    public void labelScoreUpdate(int score){
+
+    }
+
+    public void labelLevelUpdate(int level){
 
     }
 

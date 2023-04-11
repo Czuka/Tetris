@@ -10,12 +10,51 @@ public class GameArea extends JPanel  {
     private final static int CELL_SIZE = 30;
 
     private TetrisBlock block;
+    private JLabel scoreDisplayText;
+    private JLabel levelDisplayText;
+    private JLabel scoreDisplayNumber;
+    private JLabel levelDisplayNumber;
+
+
+    private int scoreN =0;
+    private int levelN =0;
 
     private Color[][] backgroundBlocs;
 
     public GameArea(){
-        this.setBounds(0,0,300,600);
+        this.setBounds(0,0,450,637);
         backgroundBlocs = new Color[ROWS][COLUMNS];
+
+        this.setLayout(null);
+
+        scoreDisplayText = new JLabel();
+        scoreDisplayText.setBounds(330,100,100,35);
+        scoreDisplayText.setForeground(new Color(18, 235, 221));
+        scoreDisplayText.setFont(new Font("Comic Sans MS",Font.ITALIC,18));
+        scoreDisplayText.setText("Score: ");
+
+        scoreDisplayNumber = new JLabel();
+        scoreDisplayNumber.setBounds(330,140,100,35);
+        scoreDisplayNumber.setForeground(new Color(18, 235, 221));
+        scoreDisplayNumber.setFont(new Font("Comic Sans MS",Font.ITALIC,22));
+
+        levelDisplayText = new JLabel();
+        levelDisplayText.setForeground(new Color(18, 235, 221));
+        levelDisplayText.setFont(new Font("Comic Sans MS",Font.ITALIC,18));
+        levelDisplayText.setBounds(330,200,100,35);
+        levelDisplayText.setText("Level: ");
+
+        levelDisplayNumber = new JLabel();
+        levelDisplayNumber.setForeground(new Color(18, 235, 221));
+        levelDisplayNumber.setFont(new Font("Comic Sans MS",Font.ITALIC,22));
+        levelDisplayNumber.setBounds(330,240,100,35);
+
+        labelUpdates( scoreN, levelN);
+
+        this.add(scoreDisplayText);
+        this.add(scoreDisplayNumber);
+        this.add(levelDisplayText);
+        this.add(levelDisplayNumber);
 
     }
 
@@ -27,8 +66,6 @@ public class GameArea extends JPanel  {
 
     public boolean moveBlockDown(){
         if (checkBottom() == false){
-            moveBlockToBackground();
-            clearLines();
             return false;
         }
         block.moveDown();
@@ -38,17 +75,20 @@ public class GameArea extends JPanel  {
     }
 
     public void moveBlockLeft(){
+        if(block== null) return;
         if(!checkLeft()) return;
         block.moveLeft();
 
         repaint();
     }
     public void moveBlockRight(){
+        if(block== null) return;
         if (!checkRight()) return;
         block.moveRight();
         repaint();
     }
     public void dropBlock(){
+        if(block== null) return;
         while(checkBottom()){
             block.moveDown();
         }
@@ -56,11 +96,18 @@ public class GameArea extends JPanel  {
 
     }
     public void rotateBlock(){
+        if(block== null) return;
         block.rotate();
         repaint();
     }
 
-
+    public boolean isOutOfBounds(){
+        if(block.getYOffSet() <0){
+            block = null;
+            return true;
+        }
+        return false;
+    }
 
     private boolean checkBottom(){
         if(block.getBootomEdge() == ROWS)    return false;
@@ -69,6 +116,7 @@ public class GameArea extends JPanel  {
         int w = block.getWidth();
         int h = block.getHeight();
 
+        // sprawdzanie bloków w tle
         for (int col= 0; col<w; col++){
             for(int row  = h-1; row>=0; row--){
                 if (shape[row][col] != 0) {
@@ -126,8 +174,9 @@ public class GameArea extends JPanel  {
         return true;
     }
 
-    public void clearLines() {
+    public int clearLines() {
         boolean lineIsFilled;
+        int linesCleared = 0;
 
         for (int r = ROWS-1; r >= 0; r--){
 
@@ -140,14 +189,15 @@ public class GameArea extends JPanel  {
                 }
             }
             if(lineIsFilled){
+                linesCleared++;
                 clearLine(r);
                 slideDown(r);
                 clearLine(0);
                 repaint();
                 r++;
             }
-
         }
+        return linesCleared;
     }
     private void clearLine(int r){
         for(int i = 0; i < COLUMNS; i++){
@@ -165,7 +215,7 @@ public class GameArea extends JPanel  {
 
 
 
-    private void moveBlockToBackground(){
+    public void moveBlockToBackground(){
         int[][]shape = block.getShape();
         int h = block.getHeight();
         int w = block.getWidth();
@@ -263,4 +313,11 @@ public class GameArea extends JPanel  {
         drawBlock(g);
 
     }
+
+    public void labelUpdates(int score,int level){
+
+        scoreDisplayNumber.setText(""+score);
+        levelDisplayNumber.setText(""+level);
+    }
+
 }
