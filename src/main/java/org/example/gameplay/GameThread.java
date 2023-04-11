@@ -7,6 +7,8 @@ public class GameThread extends Thread{
     private int scoreTrack;
     private int levelTrack = 1;
     private int scorePerLevel = 3;
+    private int pause =+ 600;
+    private float speedModificator = 1.0f;
 
     public GameThread(GameArea ga) {
         this.ga = ga;
@@ -17,14 +19,13 @@ public class GameThread extends Thread{
 
 
         while(true){
-            System.out.println("run while "+testLoop++);
 
             ga.spawnBlock();
 
             while(ga.moveBlockDown() == true){
                 try {
                     //System.out.println("run whileWhileTry "+testLoop++);
-                    Thread.sleep(300);
+                    Thread.sleep((int)(pause/speedModificator));
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
                 }
@@ -35,11 +36,12 @@ public class GameThread extends Thread{
             }
             ga.moveBlockToBackground();
             scoreTrack += ga.clearLines();
-            System.out.println(""+scoreTrack);
 
             int lvl = scoreTrack / scorePerLevel+1;
             if( lvl > levelTrack ){
                 levelTrack = lvl;
+                scorePerLevel += 1;
+                speedModificator += 0.2f;
             }
             ga.labelUpdates(scoreTrack, levelTrack);
 
