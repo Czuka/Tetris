@@ -1,7 +1,10 @@
 package org.example.gameplay;
 
+import org.example.tetrisblocks.*;
+
 import javax.swing.*;
 import java.awt.*;
+import java.util.Random;
 
 public class GameArea extends JPanel  {
 
@@ -10,6 +13,7 @@ public class GameArea extends JPanel  {
     private final static int CELL_SIZE = 30;
 
     private TetrisBlock block;
+    private TetrisBlock[] blocksShapes;
     private JLabel scoreDisplayText;
     private JLabel levelDisplayText;
     private JLabel scoreDisplayNumber;
@@ -56,11 +60,15 @@ public class GameArea extends JPanel  {
         this.add(levelDisplayText);
         this.add(levelDisplayNumber);
 
+        blocksShapes = new TetrisBlock[] {new IShape(), new JShape(), new LShape(),
+                                          new OShape(), new SShape(), new TShape(),
+                                          new ZShape()};
     }
 
     public void spawnBlock()
     {
-        block = new TetrisBlock(new int[][]{{1,0},{1,0},{1,1}}, Color.BLUE );
+        Random random = new Random();
+        block = blocksShapes[random.nextInt(blocksShapes.length)];
         block.spawn(COLUMNS);
     }
 
@@ -97,6 +105,12 @@ public class GameArea extends JPanel  {
     }
     public void rotateBlock(){
         if(block== null) return;
+
+        while ((block.getXOffSet()+block.getHeight()) > backgroundBlocs[0].length){
+            System.out.println(block.getXOffSet()+block.getHeight());
+            block.moveLeft();
+        }
+
         block.rotate();
         repaint();
     }
@@ -239,7 +253,7 @@ public class GameArea extends JPanel  {
 
         int h = block.getHeight();
         int w = block.getWidth();
-        Color c = Color.blue;
+        Color c = block.getColor();
         int [][] shape = block.getShape();
 
         for (int row = 0; row< h; row++)
